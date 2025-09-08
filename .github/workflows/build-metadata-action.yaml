@@ -1,0 +1,49 @@
+name: build metadata action
+concurrency:
+  group: build-metadata-action
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-metadata-action.yaml
+      - metadata/src/**/*
+      - metadata/package*.json
+      - metadata/*.js
+
+permissions:
+  contents: write
+
+env:
+  AUTHOR_EMAIL: admin+github-actions@tapclap.com
+  AUTHOR_NAME: 'Github Actions'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: 20
+
+      - name: node modules
+        working-directory: metadata
+        run: npm ci
+
+      - name: build
+        working-directory: metadata
+        run: npm run build
+
+      - name: commit builded action
+        run: |
+          git status
+          if git status | grep 'metadata/dist/' -q;
+          then
+            git config --global user.email "${AUTHOR_EMAIL}"
+            git config --global user.name "${AUTHOR_NAME}"
+            git add ./metadata/dist
+            git commit -m "metadata builded action"
+            git push origin ${{ github.ref }}:${{ github.ref }}   
+          fi
+

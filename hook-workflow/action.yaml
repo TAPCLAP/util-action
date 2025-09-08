@@ -1,0 +1,14 @@
+name: 'hook workflows'
+description: 'hook workflows'
+inputs:
+  workflows: 
+    description: 'list of workflows options in YAML or JSON formats (see README.md)'
+    required: true
+  github_token: 
+    description: 'github token'
+    required: false
+    default: ''
+
+runs:
+  using: 'node20'
+  main: 'dist/main.js'

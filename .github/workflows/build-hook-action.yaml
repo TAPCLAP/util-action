@@ -1,0 +1,48 @@
+name: build hook action
+concurrency:
+  group: build-hook-action
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-hook-action.yaml
+      - hook-workflow/src/**/*
+      - hook-workflow/package*.json
+      - hook-workflow/*.js
+
+permissions:
+  contents: write
+
+env:
+  AUTHOR_EMAIL: admin+github-actions@tapclap.com
+  AUTHOR_NAME: 'Github Actions'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: 20
+
+      - name: node modules
+        working-directory: hook-workflow
+        run: npm ci
+
+      - name: build
+        working-directory: hook-workflow
+        run: npm run build
+
+      - name: commit builded action
+        run: |
+          if git status | grep 'hook-workflow/dist/' -q;
+          then
+            git config --global user.email "${AUTHOR_EMAIL}"
+            git config --global user.name "${AUTHOR_NAME}"
+            git add ./hook-workflow/dist
+            git commit -m "hook-workflow builded action"
+            git push origin ${{ github.ref }}:${{ github.ref }}   
+          fi
+

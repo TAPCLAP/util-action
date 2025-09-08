@@ -1,0 +1,6 @@
+name: 'metadata'
+description: 'metadata'
+
+runs:
+  using: 'node20'
+  main: 'dist/main.js'
