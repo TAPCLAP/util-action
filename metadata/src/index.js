@@ -1,4 +1,6 @@
+import 'source-map-support/register.js';
 import * as github from '@actions/github'
+import * as core from '@actions/core';
 
 async function main() {
   try {
