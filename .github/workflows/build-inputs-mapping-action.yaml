@@ -1,15 +1,15 @@
-name: build hook action
+name: build inputs mapping action
 concurrency:
-  group: build-hook-action
+  group: build-inputs-mapping-action
 on:
   push:
     branches:
       - main
     paths:
-      - .github/workflows/build-hook-action.yaml
-      - hook-workflow/src/**/*
-      - hook-workflow/package*.json
-      - hook-workflow/*.js
+      - .github/workflows/build-inputs-mapping-action.yaml
+      - inputs-mapping/src/**/*
+      - inputs-mapping/package*.json
+      - inputs-mapping/*.js
 
 permissions:
   contents: write
@@ -28,21 +28,22 @@ jobs:
           node-version: 20
 
       - name: node modules
-        working-directory: hook-workflow
+        working-directory: inputs-mapping
         run: npm ci
 
       - name: build
-        working-directory: hook-workflow
+        working-directory: inputs-mapping
         run: npm run build
+
 
       - name: commit builded action
         run: |
-          if git status | grep 'hook-workflow/dist/' -q;
+          if git status | grep 'inputs-mapping/dist/' -q;
           then
             git config --global user.email "${AUTHOR_EMAIL}"
             git config --global user.name "${AUTHOR_NAME}"
-            git add ./hook-workflow/dist
-            git commit -m "builded hook-workflow action"
+            git add ./inputs-mapping/dist
+            git commit -m "builded inputs-mapping action"
             while true; do
               if ! git push origin ${{ github.ref }}:${{ github.ref }}; then
                 echo "Push failed, sleep 10 seconds and retrying..."
