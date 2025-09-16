@@ -4,6 +4,14 @@ inputs:
   workflows: 
     description: 'list of workflows options in YAML or JSON formats (see README.md)'
     required: true
+  wait: 
+    description: 'wait for workflows to complete'
+    required: false
+    default: 'false'
+  fail-on-error: 
+    description: 'fail if any of the workflows fail. Only applicable if wait is true'
+    required: false
+    default: 'false'
   github_token: 
     description: 'github token'
     required: false

@@ -58,6 +58,39 @@
 
 Когда нам нужно передать параметры, то вместо строки, элемент массива должен быть объектом и в нём как минимум должно быть  поле `"name"`. Иначе action не поймёт какой workflow хукать
 
+### дожидаемся выполнения вызванных workflow
+
+```yaml
+# nosemgrep
+- uses: tapclap/util-action/hook-workflow@main
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    wait: 'true'
+    workflows: |
+    - name: workflow1.yaml
+      inputs:
+        param1: value1
+        param2: value2
+    - workflow2.yaml
+```
+
+### дожидаемся выполнения вызванных workflow и фейлим action если хоть один из вызванных workflow завершился ошибкой
+
+```yaml
+# nosemgrep
+- uses: tapclap/util-action/hook-workflow@main
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    wait: 'true'
+    fail-on-error: 'true'
+    workflows: |
+    - name: workflow1.yaml
+      inputs:
+        param1: value1
+        param2: value2
+    - workflow2.yaml
+```
+
 
 ## Inputs
 
@@ -66,3 +99,15 @@ github token для того чтобы хукнуть workflow
 
 ### `workflows`
 Список workflows в yaml или json формате
+
+### `wait`
+Обязательный: **нет**  
+Умолчание: `'false'`
+
+Если параметр равен `'true'`, то action будет ожидать конца выполнения всех action'ов которые он хукнул
+
+### `fail-on-error`
+Обязательный: **нет**  
+Умолчание: `'false'`
+
+Если параметр равен `'true'`, то при неуспешном выполнении любого из хукнутых workflows то этот action завершается ошибкой
