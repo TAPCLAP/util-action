@@ -1,0 +1,17 @@
+name: 'inputs-mapping'
+description: 'inputs mapping'
+inputs:
+  inputs: 
+    description: 'inputs in JSON/YAML format'
+    required: true
+  mapping: 
+    description: 'mapping config in YAML/JSON format'
+    required: true
+
+outputs:
+  mapped:
+    description: 'mapped inputs in JSON format'
+
+runs:
+  using: 'node20'
+  main: 'dist/main.js'
