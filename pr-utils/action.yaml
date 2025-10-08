@@ -1,0 +1,22 @@
+name: 'pr-utils'
+description: 'pr-utils'
+
+inputs:
+  token:
+    description: The GitHub token
+    required: true
+  info:
+    description: The comment to ensure is present in the PR
+    required: true
+  template-vars:
+    description: The template for the comment and check run status
+    required: false
+    default: ''
+  check-run:
+    description: The name of the check run
+    required: false
+    default: ''
+
+runs:
+  using: 'node24'
+  main: 'dist/main.js'
