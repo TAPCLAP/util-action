@@ -15,13 +15,21 @@ outputs:
     description: The repository name
   repository-lower-case:
     description: The repository name in lower case
-  issue-pull-request:
-    description: Pull request data (https://octokit.github.io/rest.js/v22/#pulls-get) by issue comment event 
-  ref:
-    description: ref name, for PR get ref from head, for issue comment event on the PR get ref from PR head
-  sha:
-    description: commit sha, for PR get sha from head, for issue comment event on the PR get sha from PR head
-  
+  pull-request:
+    description: Pull request data (https://octokit.github.io/rest.js/v22/#pulls-get)
+  head-ref:
+    description: 'for push branch: refs/heads/branch-name, for PR: refs/heads/pr-head-branch-name, for Issue comment event on PR: refs/heads/pr-head-branch-name'
+  head-ref-name:
+    description: 'for push branch: branch-name, for PR: pr-head-branch-name, for Issue comment event on PR: pr-head-branch-name'
+  head-sha:
+    description: 'for push branch: commit sha of branch name, for PR: commit sha of PR head, for Issue comment event on PR: commit sha of PR head'
+  merge-ref:
+    description: 'for push branch: refs/heads/branch-name, for PR: refs/pull/pr-number/merge, for Issue comment event on PR: refs/pull/pr-number/merge'
+  merge-sha:
+    description: 'for push branch: commit sha of branch, for PR: commit sha of PR merge, for Issue comment event on PR: commit sha of PR merge'
+  all: 
+    description: 'Contains all the fields listed above'
+
 runs:
   using: 'node24'
   main: 'dist/main.js'

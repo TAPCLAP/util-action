@@ -18,20 +18,15 @@ Action также умеет работать извлекать информа�
     echo "Owner lower case: ${{ steps.metadata.outputs.owner-lower-case }}"
     echo "Repository: ${{ steps.metadata.outputs.repository }}"
     echo "Repository lower case: ${{ steps.metadata.outputs.repository-lower-case }}"
+    echo "PR data: ${{ steps.metadata.outputs.pull-request }}"
+    echo "head ref: ${{ steps.metadata.outputs.head-ref }}"
+    echo "head ref name: ${{ steps.metadata.outputs.head-ref-name }}"
+    echo "head sha: ${{ steps.metadata.outputs.head-sha }}"
+    echo "merge ref: ${{ steps.metadata.outputs.merge-ref }}"
+    echo "merge sha: ${{ steps.metadata.outputs.merge-sha }}"
+    echo "all: ${{ steps.metadata.outputs.all }}"
 ```
 
-### Использование с токеном для работы с событиями issue_comment на PR
-```yaml
-  # nosemgrep
-- uses: tapclap/util-action/metadata@main
-  id: metadata
-  with:
-    token: ${{ secrets.GITHUB_TOKEN }}
-- run: |
-    echo "PR data: ${{ steps.metadata.outputs.issue-pull-request }}"
-    echo "Ref: ${{ steps.metadata.outputs.ref }}"
-    echo "SHA: ${{ steps.metadata.outputs.sha }}"
-```
 
 ## Inputs
 
@@ -54,11 +49,38 @@ Action также умеет работать извлекать информа�
 ### `repository-lower-case`
 **Описание**: Имя репозитория (только имя самого репозитория, без owner'а) в нижнем регистре
 
-### `issue-pull-request`
-**Описание**: JSON данные о Pull Request при событии комментария к issue. Содержит полную информацию о PR согласно [Octokit API](https://octokit.github.io/rest.js/v22/#pulls-get). Если событие не связано с issue комментарием, возвращает пустой JSON объект `{}`
+### `pull-request`
+**Описание**: JSON данные о Pull Request. Содержит полную информацию о PR согласно [Octokit API](https://octokit.github.io/rest.js/v22/#pulls-get). Доступно для событий `pull_request` и `issue_comment` на PR. Для других событий возвращает пустой JSON объект `{}`
 
-### `ref`
-**Описание**: Имя ветки (ref). Для Pull Request берется из head ветки, для issue комментариев на PR - тоже из head ветки PR
+### `head-ref`
+**Описание**: Полный ref ветки:
+- Для push событий: `refs/heads/branch-name`
+- Для Pull Request: `refs/heads/pr-head-branch-name`
+- Для issue_comment на PR: `refs/heads/pr-head-branch-name`
 
-### `sha`
-**Описание**: SHA коммита. Для Pull Request берется из head коммита, для issue комментариев на PR - из head коммита связанного PR
+### `head-ref-name`
+**Описание**: Короткое имя ветки (без префикса `refs/heads/`):
+- Для push событий: `branch-name`
+- Для Pull Request: `pr-head-branch-name`
+- Для issue_comment на PR: `pr-head-branch-name`
+
+### `head-sha`
+**Описание**: SHA коммита head ветки:
+- Для push событий: commit sha ветки
+- Для Pull Request: commit sha из head ветки PR
+- Для issue_comment на PR: commit sha из head ветки PR
+
+### `merge-ref`
+**Описание**: Ref для merge:
+- Для push событий: `refs/heads/branch-name`
+- Для Pull Request: `refs/pull/pr-number/merge`
+- Для issue_comment на PR: `refs/pull/pr-number/merge`
+
+### `merge-sha`
+**Описание**: SHA merge коммита:
+- Для push событий: commit sha ветки
+- Для Pull Request: commit sha merge PR
+- Для issue_comment на PR: commit sha merge PR
+
+### `all`
+**Описание**: JSON объект содержащий все вышеперечисленные поля. Удобно использовать для передачи всех метаданных одним output'ом
