@@ -8,32 +8,37 @@ Action также умеет работать извлекать информа�
 
 ### Базовое использование
 ```yaml
+  # nosemgrep
 - uses: tapclap/util-action/metadata@main
   id: metadata
+  with:
+    token: ${{ secrets.GITHUB_TOKEN }}
 - run: |
     echo "Owner: ${{ steps.metadata.outputs.owner }}"
+    echo "Owner lower case: ${{ steps.metadata.outputs.owner-lower-case }}"
     echo "Repository: ${{ steps.metadata.outputs.repository }}"
-    echo "Ref: ${{ steps.metadata.outputs.ref }}"
-    echo "SHA: ${{ steps.metadata.outputs.sha }}"
+    echo "Repository lower case: ${{ steps.metadata.outputs.repository-lower-case }}"
 ```
 
 ### Использование с токеном для работы с событиями issue_comment на PR
 ```yaml
+  # nosemgrep
 - uses: tapclap/util-action/metadata@main
   id: metadata
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
 - run: |
     echo "PR data: ${{ steps.metadata.outputs.issue-pull-request }}"
+    echo "Ref: ${{ steps.metadata.outputs.ref }}"
+    echo "SHA: ${{ steps.metadata.outputs.sha }}"
 ```
 
 ## Inputs
 
 ### `token`
 - **Описание**: GitHub токен для доступа к API
-- **Обязательный**: Нет
-- **По умолчанию**: `''` (пустая строка)
-- **Примечание**: Требуется только при работе с issue комментариями для получения информации о связанном Pull Request
+- **Обязательный**: Да
+- **Примечание**: Требуется при работе с событями issue_сomment для получения информации о связанном Pull Request
 
 ## Outputs
 
@@ -53,7 +58,7 @@ Action также умеет работать извлекать информа�
 **Описание**: JSON данные о Pull Request при событии комментария к issue. Содержит полную информацию о PR согласно [Octokit API](https://octokit.github.io/rest.js/v22/#pulls-get). Если событие не связано с issue комментарием, возвращает пустой JSON объект `{}`
 
 ### `ref`
-**Описание**: Имя ветки (ref). Для Pull Request берется из head ветки, для issue комментариев на PR - из head ветки связанного PR
+**Описание**: Имя ветки (ref). Для Pull Request берется из head ветки, для issue комментариев на PR - тоже из head ветки PR
 
 ### `sha`
 **Описание**: SHA коммита. Для Pull Request берется из head коммита, для issue комментариев на PR - из head коммита связанного PR

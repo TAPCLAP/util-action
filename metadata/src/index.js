@@ -4,7 +4,7 @@ import * as core from '@actions/core';
 
 async function main() {
   try {
-    const token = core.getInput('token', { required: false });
+    const token = core.getInput('token', { required: true });
 
     const context = github.context;
     core.setOutput("owner", context.payload.repository.owner.login);

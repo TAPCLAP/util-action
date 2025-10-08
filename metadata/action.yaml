@@ -4,8 +4,7 @@ description: 'metadata'
 inputs:
   token:
     description: The GitHub token
-    required: false
-    default: ''
+    required: true
 
 outputs:
   owner:
