@@ -1,6 +1,28 @@
 name: 'metadata'
 description: 'metadata'
 
+inputs:
+  token:
+    description: The GitHub token
+    required: false
+    default: ''
+
+outputs:
+  owner:
+    description: The owner of the repository
+  owner-lower-case:
+    description: The owner of the repository in lower case
+  repository:
+    description: The repository name
+  repository-lower-case:
+    description: The repository name in lower case
+  issue-pull-request:
+    description: Pull request data (https://octokit.github.io/rest.js/v22/#pulls-get) by issue comment event 
+  ref:
+    description: ref name, for PR get ref from head, for issue comment event on the PR get ref from PR head
+  sha:
+    description: commit sha, for PR get sha from head, for issue comment event on the PR get sha from PR head
+  
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/main.js'
