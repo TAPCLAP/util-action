@@ -12,7 +12,9 @@ async function main() {
     core.setOutput("repository", context.payload.repository.name);
     core.setOutput("repository-lower-case", context.payload.repository.name.toLowerCase());
     
-    core.debug(JSON.stringify(context, null, 2));
+    if(core.isDebug()) {
+      console.log(JSON.stringify(context, null, 2));
+    }
 
     let ref = context.ref;
     let sha = context.sha;
