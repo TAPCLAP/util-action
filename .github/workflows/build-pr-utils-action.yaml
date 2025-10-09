@@ -1,0 +1,57 @@
+name: build pr utils action
+concurrency:
+  group: build-pr-utils-action
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-pr-utils-action.yaml
+      - pr-utils/src/**/*
+      - pr-utils/package*.json
+      - pr-utils/*.js
+
+permissions:
+  contents: write
+
+env:
+  AUTHOR_EMAIL: admin+github-actions@tapclap.com
+  AUTHOR_NAME: 'Github Actions'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: 20
+
+      - name: node modules
+        working-directory: pr-utils
+        run: npm ci
+
+      - name: build
+        working-directory: pr-utils
+        run: npm run build
+
+
+      - name: commit builded action
+        run: |
+          if git status | grep 'pr-utils/dist/' -q;
+          then
+            git config --global user.email "${AUTHOR_EMAIL}"
+            git config --global user.name "${AUTHOR_NAME}"
+            git add ./pr-utils/dist
+            git commit -m "builded pr-utils action"
+            while true; do
+              if ! git push origin ${{ github.ref }}:${{ github.ref }}; then
+                echo "Push failed, sleep 10 seconds and retrying..."
+                git pull --rebase
+                sleep 10
+                continue
+              else
+                break
+              fi
+            done
+          fi
