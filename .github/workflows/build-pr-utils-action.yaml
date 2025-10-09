@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - pr-utils
     paths:
       - .github/workflows/build-pr-utils-action.yaml
       - pr-utils/src/**/*
