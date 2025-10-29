@@ -26,7 +26,10 @@ async function main() {
         core.info(`Setting output '${to}': '${vars[from]}'`);
         core.setOutput(to, vars[from]);
       } else {
-        if (!defaults) { continue; }
+        if (!defaults) { 
+          throw new Error(`Not found var '${from}' and no default for '${to}'`);
+        }
+        
         let defaultValue = defaults.find(d => d.name === to)
         if (!defaultValue) {
           throw new Error(`Not found var '${from}' and no default for '${to}'`);
