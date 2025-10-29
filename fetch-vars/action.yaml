@@ -1,0 +1,17 @@
+name: 'fetch-vars'
+description: 'fetch vars'
+
+inputs:
+  vars: 
+    description: 'inputs in JSON/YAML format'
+    required: true
+  fetch: 
+    description: 'fetch config in YAML/JSON format'
+    required: true
+  defaults: 
+    description: 'defaults config in YAML/JSON format'
+    required: false
+
+runs:
+  using: 'node24'
+  main: 'dist/main.js'
