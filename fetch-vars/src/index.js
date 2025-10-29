@@ -22,8 +22,8 @@ async function main() {
       const to = i.to;
 
       if (vars[from]) {
-        core.info(`Fetching '${from}' to '${to}': ${vars[from]}`);
-        core.info(`Setting output '${to}': ${vars[from]}`);
+        core.info(`Fetching '${from}' to '${to}': '${vars[from]}'`);
+        core.info(`Setting output '${to}': '${vars[from]}'`);
         core.setOutput(to, vars[from]);
       } else {
         let defaultValue = defaults.find(d => d.name === to)
@@ -38,7 +38,7 @@ async function main() {
         throw new Error(`Invalid default item. "name" and "value" are required: ${JSON.stringify(d)}`);
       }
       if (!vars[d.name]) {
-        core.info(`Setting output '${d.name}': ${d.value}`);
+        core.info(`Setting output '${d.name}': '${d.value}'`);
         core.setOutput(d.name, d.value);
       }
     }
