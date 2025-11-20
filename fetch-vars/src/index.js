@@ -14,6 +14,8 @@ async function main() {
     const fetch = yamlParse(fetchText);
     const defaults = yamlParse(defaultsText);
 
+    let setOutputs = {};
+
     for (const i of fetch) {
       if (!i.hasOwnProperty('from') || !i.hasOwnProperty('to')) {
         throw new Error(`Invalid fetch item. "from" and "to" are required: ${JSON.stringify(i)}`);
@@ -25,6 +27,7 @@ async function main() {
         core.info(`Fetching '${from}' to '${to}': '${vars[from]}'`);
         core.info(`Setting output '${to}': '${vars[from]}'`);
         core.setOutput(to, vars[from]);
+        setOutputs[to] = vars[from];
       } else {
         if (!defaults) { 
           throw new Error(`Not found var '${from}' and no default for '${to}'`);
@@ -45,7 +48,7 @@ async function main() {
       if (!d.hasOwnProperty('name') || !d.hasOwnProperty('value')) {
         throw new Error(`Invalid default item. "name" and "value" are required: ${JSON.stringify(d)}`);
       }
-      if (!vars[d.name]) {
+      if (!setOutputs.hasOwnProperty(d.name)) {
         core.info(`Setting output '${d.name}': '${d.value}'`);
         core.setOutput(d.name, d.value);
       }
