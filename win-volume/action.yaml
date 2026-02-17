@@ -1,0 +1,20 @@
+name: 'win-volume'
+description: 'Maps workspace to a temporary subst drive on Windows and auto-cleans it in post step.'
+
+inputs:
+  workdir:
+    description: 'Directory to map with subst'
+    required: false
+    default: ${{ github.workspace }}
+
+outputs:
+  volume:
+    description: 'Allocated drive letter'
+  workdir:
+    description: 'Mapped workdir path (e.g. X:/)'
+
+runs:
+  using: 'node24'
+  main: 'dist/main.js'
+  post: 'dist/post.js'
+  post-if: 'always()'

@@ -1,0 +1,57 @@
+name: build win volume
+concurrency:
+  group: build-win-volume
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/build-win-volume.yaml
+      - win-volume/src/**/*
+      - win-volume/package*.json
+      - win-volume/*.js
+
+permissions:
+  contents: write
+
+env:
+  AUTHOR_EMAIL: admin+github-actions@tapclap.com
+  AUTHOR_NAME: 'Github Actions'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: 20
+
+      - name: node modules
+        working-directory: win-volume
+        run: npm ci
+
+      - name: build
+        working-directory: win-volume
+        run: npm run build
+
+
+      - name: commit builded action
+        run: |
+          if git status | grep 'win-volume/dist/' -q;
+          then
+            git config --global user.email "${AUTHOR_EMAIL}"
+            git config --global user.name "${AUTHOR_NAME}"
+            git add ./win-volume/dist
+            git commit -m "builded win-volume action"
+            while true; do
+              if ! git push origin ${{ github.ref }}:${{ github.ref }}; then
+                echo "Push failed, sleep 10 seconds and retrying..."
+                git pull --rebase
+                sleep 10
+                continue
+              else
+                break
+              fi
+            done
+          fi
